@@ -1,9 +1,4 @@
-pipeline{
-  agent{
-    docker {
-      image 'maven'
-    }
-  }   
+pipeline{   
   stages {       
     stage('Clone repository') {               
       steps {    
@@ -13,9 +8,15 @@ pipeline{
     stage('Build package') {      
       steps {
           sh 'mvn clean package'
-      } 
+      }
+      agent{
+        docker {
+          image 'maven'
+        }
+  }
     }  
     stage('Push image') {
+      agent any
       steps {
         script{
           docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {         
