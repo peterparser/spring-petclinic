@@ -1,27 +1,12 @@
 pipeline{  
   agent any 
   stages {       
-    stage('Clone repository') {               
-      steps {    
-          checkout scm
-      }  
-    }   
-    stage('Build package') {      
-      steps {
-          sh 'mvn clean package'
-      }
-      agent{
-        docker {
-          image 'maven'
-        }
-  }
-    }  
-    stage('Push image') {
+    stage('Build & push image') {
       agent any
       steps {
         script{
-          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {         
-            app = docker.build("petclinic")       
+            app = docker.build("petclinic")
+            docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {       
             app.push("${env.BUILD_NUMBER}")            
             app.push("latest")
           }
