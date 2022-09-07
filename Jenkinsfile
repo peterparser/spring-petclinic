@@ -1,18 +1,14 @@
 pipeline{
   agent{
     docker {
-      image 'maven'
+      image 'openjdk:20-slim-buster'
     }
   }   
-  stages {       
-    stage('Clone repository') {               
-      steps {    
-          checkout scm
-      }  
-    }   
+  stages {        
     stage('Build package') {      
       steps {
-          sh 'mvn clean package'
+          sh 'chmod +x mvnw'
+          sh './mvnw clean package'
       } 
     }  
     stage('Push image') {
