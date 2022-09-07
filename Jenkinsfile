@@ -1,10 +1,16 @@
 pipeline{
   agent{
     docker {
-      image 'openjdk:20-slim-buster'
+      image 'openjdk:20-slim-buster
+'
     }
   }   
-  stages {        
+  stages {       
+    stage('Clone repository') {               
+      steps {    
+          checkout scm
+      }  
+    }   
     stage('Build package') {      
       steps {
           sh 'chmod +x mvnw'
