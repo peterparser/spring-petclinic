@@ -1,4 +1,9 @@
-node {    
+pipeline{
+  agent {
+    docker { image 'openjdk:20-slim-buster'}
+}
+
+stages {    
       def app     
       stage('Clone repository') {               
              
