@@ -1,27 +1,32 @@
 pipeline{
-  agent {
-    docker { image 'openjdk:20-slim-buster'}
-}
-
+  agent{
+    docker {
+      image 'maven:3-jdk-11'
+    }
+  }   
 stages {    
       def app     
       stage('Clone repository') {               
-             
-            checkout scm    
+        steps {    
+            checkout scm
+        }  
       }   
-      stage('Build package') {         
-       
-            sh 'mvn clean package' 
+      stage('Build package') {      
+        steps {
+            sh 'mvn clean package'
+        } 
        }  
       stage('Build image') {         
-       
+       steps {
             app = docker.build("petclinic")    
-       }     
-       stage('Push image') {
-       docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {            
-         app.push("${env.BUILD_NUMBER}")            
-         app.push("latest")        
+       }   
         }    
+       stage('Push image') {
+        steps {
+          docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {            
+            app.push("${env.BUILD_NUMBER}")            
+            app.push("latest")
+          }        
+          }    
       }
     }
-}
